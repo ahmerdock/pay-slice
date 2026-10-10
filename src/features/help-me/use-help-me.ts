@@ -73,11 +73,7 @@ export default function useHelpMe(): IUseHelpMeReturn {
         await finishTransaction({ purchase, isConsumable: true });
         showSuccess(purchase.productId);
       } catch (finishError) {
-        showError(
-          finishError instanceof Error
-            ? finishError.message
-            : "Failed to complete purchase",
-        );
+        showError(getErrorMessage(finishError));
       } finally {
         setPurchasingProductIdState(null);
       }
@@ -211,9 +207,9 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   return {
     isAvailable,
-    isProductsLoading: isAvailable ? isProductsLoading : false,
-    productsById: isAvailable ? productsById : {},
-    purchasingProductId: isAvailable ? purchasingProductId : null,
+    isProductsLoading,
+    productsById,
+    purchasingProductId,
     purchase,
   };
 }

@@ -73,6 +73,10 @@ export default function useHome() {
   const closeSheet = () => setIsSheetVisible(false);
 
   const saveCategory = (label: string, percent: number) => {
+    if (!isSheetVisible) {
+      return;
+    }
+
     const categories = editingCategory
       ? budget.categories.map((category) =>
           category.id === editingCategory.id
@@ -86,7 +90,7 @@ export default function useHome() {
   };
 
   const deleteCategory = () => {
-    if (!editingCategory) {
+    if (!isSheetVisible || !editingCategory) {
       return;
     }
 

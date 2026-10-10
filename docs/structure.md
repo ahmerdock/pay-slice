@@ -25,6 +25,8 @@ Native modules (MMKV, Unistyles, `expo-iap`) mean the app needs a development bu
 
 ```
 pay-slice/
+├── README.md             Quick start and setup notes
+├── AGENTS.md             Instructions for coding agents (Expo, commands, rules)
 ├── app.json              Expo config (name, package, plugins)
 ├── eas.json              EAS build profiles (no project id yet: run `eas init`)
 ├── package.json          Dependencies, scripts and the Jest config
@@ -84,7 +86,7 @@ A feature folder holds everything for one screen:
 Create only the files a feature needs. Examples:
 - `home/`: the expense manager. `use-home.ts` holds the state (income, categories, sheet) and saves to MMKV inside its handlers, `home.utils.ts` has the pure maths (`computeBreakdown`, `parseStoredBudget`), `home.data.ts` the storage key, `home.styles.ts` and `home.interface.ts`.
 - `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.data.ts` (contact links), `settings.styles.ts`.
-- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts`. It has no styles file because it borrows `actionCardStyles` from the barrel.
+- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts` (product-ID and purchase-error helpers, with `help-me.utils.test.ts`). It has no styles file because it borrows `actionCardStyles` from the barrel.
 
 ### `components/` (reusable UI)
 
@@ -157,11 +159,11 @@ The tab is called Budget (`PAGE_TITLES.HOME`), and its code lives in `features/h
 
 - One monthly income field (no currency symbol; any number works). It shows raw digits while focused and thousands separators when not.
 - Categories (label and percentage) start empty, and the "Unallocated" row still shows (100% of the income) so the screen is never blank. Each row shows its percentage and its amount, and the amounts update live as the income changes. There is no calculate button.
-- Tapping a row opens the sheet to edit it, with a Delete button (asks to confirm). The sheet prefills the percentage with whatever is still unallocated.
+- Tapping a row opens the sheet to edit it, with a Delete button (asks to confirm). The sheet prefills the percentage with whatever is still unallocated. Save and Delete do nothing once the sheet is closing, so a quick double-tap cannot add a category twice.
 - The total can pass 100%: this only warns. The allocation bar and an "Over by" row turn the warning color, and the sheet says how far over the total will be.
 - Under 100%, the "Unallocated" row shows the rest. Amounts are computed in whole cents and percentages in hundredths of a percent, and the unallocated amount is income minus the rounded rows, so the rows add up. At exactly 100% the row is hidden, so a cent or so of rounding difference can go unshown.
 - Income and categories are saved to MMKV under one key (`pay_slice_budget`) on every change, and read synchronously on start. Broken or missing data falls back to an empty budget.
 
 ## Tests
 
-Jest with the `jest-expo` preset. The money maths (`home.utils.test.ts`) and the number helpers (`utils/format.test.ts`, `utils/number-input.test.ts`) are covered. The screen hook and the sheet are not unit-tested yet.
+Jest with the `jest-expo` preset (`pnpm test`). Covered: the money maths (`home.utils.test.ts`), the number helpers (`utils/format.test.ts`, `utils/number-input.test.ts`) and the purchase helpers (`help-me.utils.test.ts`). The screen hooks (`use-home`, `use-help-me`) and the category sheet are not unit-tested yet. Test files that import `help-me.data` must mock it, because its Lucide icon imports do not load under Jest.
