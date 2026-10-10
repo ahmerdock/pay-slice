@@ -29,7 +29,7 @@ pay-slice/
 ├── babel.config.js       Babel preset plus the Unistyles plugin (root: "src")
 ├── tsconfig.json         TypeScript config and the "@/..." path aliases
 ├── eslint.config.js      Lint config (`npx expo lint`)
-├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon)
+├── assets/               App icon, splash and adaptive icon layers
 ├── docs/                 Project documentation (this folder)
 ├── .claude/, .vscode/    Editor and Claude Code settings (not app code)
 └── src/                  All application code
@@ -126,6 +126,16 @@ Small pure helpers with no framework code, shared by features and components.
 ### Hard-coded colours (intentional)
 
 Theme colours come from the theme everywhere except two places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes) and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
+
+## App icon and splash
+
+The icon is a wallet with a pie chart. The files are in `assets/`, and `app.json` points at them:
+- `images/icon.png`: the main icon (wallet on a full-bleed `#0D0C0C` square).
+- `images/android-icon-foreground.png`, `android-icon-background.png` (solid `#0D0C0C`) and `android-icon-monochrome.png`: the Android adaptive icon. The wallet sits inside Android's safe zone. Launchers keep only the monochrome layer's transparency and tint it one colour, so its wallet and clasp are opaque and the cards and pie slices are see-through tones.
+- `images/splash-icon.png`: the splash image, shown on `#0D0C0C`.
+- `expo.icon/`: the iOS icon (`Assets/wallet.png` is its layer).
+
+All are 1024×1024 PNGs. The master art is not kept in the repo, so to change the icon, replace these files directly.
 
 ## Theme
 
