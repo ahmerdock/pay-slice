@@ -6,7 +6,7 @@ export const ROUTE_NAMES = {
 } as const satisfies Record<string, string>;
 
 export const PAGE_TITLES = {
-  HOME: "Home",
+  HOME: "Budget",
   HELP_ME: "Help Me",
   SETTINGS: "Settings",
 };

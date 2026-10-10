@@ -47,6 +47,7 @@ src/
 ├── components/     Reusable UI components, plus a barrel (index.ts)
 ├── assets/icon/    Our own SVG icon components (GitHub, LinkedIn)
 ├── constants/      Route names, page titles, layout numbers
+├── utils/          Small pure helpers (number formatting and input cleaning)
 └── theme/          Unistyles setup: themes, fonts, saved-theme loading
 ```
 
@@ -59,7 +60,7 @@ app/
 ├── _layout.tsx          Theme import, then renders layouts/root (RootLayout)
 └── (tabs)/
     ├── _layout.tsx      Tabs navigator using the custom tab bar
-    ├── index.tsx        Home tab        -> features/home (placeholder for now)
+    ├── index.tsx        Budget tab      -> features/home (income and category split)
     ├── help-me.tsx      Help Me tab     -> features/help-me
     └── settings.tsx     Settings tab    -> features/settings
 ```
@@ -78,7 +79,7 @@ A feature folder holds everything for one screen:
 | `<feature>.styles.ts` | Unistyles styles |
 
 Create only the files a feature needs. Examples:
-- `home/`: an empty placeholder inside `TabsLayout`. The expense manager goes here.
+- `home/`: the expense manager. `use-home.ts` holds the state (income, categories, sheet) and saves to MMKV inside its handlers, `home.utils.ts` has the pure maths (`computeBreakdown`, `parseStoredBudget`), `home.data.ts` the storage key, `home.styles.ts` and `home.interface.ts`.
 - `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.data.ts` (contact links), `settings.styles.ts`.
 - `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts`. It has no styles file because it borrows `actionCardStyles` from the barrel.
 
@@ -99,6 +100,7 @@ Add `use-<name>.ts` when the component has logic (state, animation, handlers) an
 - `tab-item/`: a single tab, with its own hook for the label animation.
 - `app-icon/`: renders any Lucide-style icon at a given size, color and stroke width.
 - `action-card/`, `card/`, `screen-title/`, `short-heading/`: small building blocks.
+- `allocation-bar/`, `category-row/`, `category-sheet/`: the Home screen pieces. `category-sheet/` is a bottom-sheet `Modal` with a label and a percentage field, used for both adding and editing; `use-category-sheet.ts` holds its form state and the over-100% warning.
 - Components never import from `features/`.
 
 `components/index.ts` is the barrel. Every component is exported from it.
@@ -114,6 +116,13 @@ Each layout is a folder with the same anatomy as a component and is exported fro
 
 Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` are small outlined SVG components built with `react-native-svg`. They are exported from `index.ts` and take `size`, `color` and `strokeWidth` like Lucide icons. Add any other custom icon here.
 
+### `utils/`
+
+Small pure helpers with no framework code, shared by features and components.
+
+- `format.ts`: `formatAmount` (thousands separators, up to 2 decimals, no currency symbol) and `formatPercent`.
+- `number-input.ts`: `sanitizeDecimalInput`, which cleans a typed number (digits and one decimal point, a comma counts as the point, at most 2 decimals).
+
 ### Hard-coded colours (intentional)
 
 Theme colours come from the theme everywhere except two places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes) and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
@@ -123,8 +132,21 @@ Theme colours come from the theme everywhere except two places: the switch thumb
 `theme/unistyles.ts` defines the light and dark themes, loads the saved theme from MMKV and registers them with Unistyles.
 
 - Fonts: `theme.typography.heading.regular` (Bebas Neue) for headings, `theme.typography.body.regular | medium | bold` (DM Sans) for everything else, and `theme.typography.mono.regular | medium` (DM Mono) for numbers and labels. Bebas Neue is all-caps, so never use it for text where upper and lower case must differ.
-- The theme still carries colors inherited from Pass Dice (`digit`, `symbol`, `strengthWeak | strengthFair | strengthStrong | strengthVeryStrong`). Remove them once Pay Slice's own palette is settled. Add new colors to both themes.
+- Theme colors beyond the basics: `onPrimary` (text and icons on the primary color) and `warning` (over-100% messages and the Delete button). Add new colors to both themes.
 
 ## Help Me tips
 
 - Three one-time products with the IDs `tip_coffee`, `tip_lunch` and `tip_feature` (see `help-me.data.ts`). They must exist in Google Play Console for the package `com.ahmersdev.payslice`.
+
+## Home screen behaviour
+
+- One monthly income field (no currency symbol; any number works). It shows raw digits while focused and thousands separators when not.
+- Categories (label and percentage) start empty. Each row shows its percentage and its amount, and the amounts update live as the income changes. There is no calculate button.
+- Tapping a row opens the sheet to edit it, with a Delete button (asks to confirm). The sheet prefills the percentage with whatever is still unallocated.
+- The total can pass 100%: this only warns. The allocation bar and an "Over by" row turn the warning color, and the sheet says how far over the total will be.
+- Under 100%, an "Unallocated" row shows the rest. Amounts are computed in whole cents and percentages in hundredths of a percent, and the unallocated amount is income minus the rounded rows, so the rows always add up.
+- Income and categories are saved to MMKV under one key (`pay_slice_budget`) on every change, and read synchronously on start. Broken or missing data falls back to an empty budget.
+
+## Tests
+
+Jest with the `jest-expo` preset. The money maths (`home.utils.test.ts`), number cleaning and formatting (`utils/`) are covered. The screen hook and the sheet are not unit-tested yet.

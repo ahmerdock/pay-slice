@@ -2,7 +2,7 @@
 
 An expense manager for Android, built with Expo and React Native.
 
-The Home tab is a placeholder for now. Help Me and Settings (light and dark theme, contact links) are in place.
+Enter a monthly income, add categories with a percentage, and see how much of the income each one gets. Categories and income are saved on the device. Help Me and Settings (light and dark theme, contact links) are also in place.
 
 ## Run it
 

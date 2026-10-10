@@ -1,7 +1,10 @@
 export { default as ActionCard } from "./action-card";
 export { actionCardStyles } from "./action-card/action-card.styles";
+export { default as AllocationBar } from "./allocation-bar";
 export { default as AppIcon } from "./app-icon";
 export { default as Card } from "./card";
+export { default as CategoryRow } from "./category-row";
+export { default as CategorySheet } from "./category-sheet";
 export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
 export { default as ScreenTitle } from "./screen-title";

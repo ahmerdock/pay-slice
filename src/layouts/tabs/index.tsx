@@ -20,6 +20,7 @@ export default function TabsLayout(props: ITabsLayoutProps) {
         <ScrollView
           contentContainerStyle={tabsStyles.contentContainer(tabBarHeight)}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
           {children}
         </ScrollView>
