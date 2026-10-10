@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+.pnpm-store
+.vscode
 
 # Expo
 .expo/
@@ -41,3 +43,17 @@ example
 # generated native folders
 /ios
 /android
+
+# claude
+.claude
+
+# plans
+/docs/plans
+
+# local native modules: Gradle build output
+/modules/*/android/build/
+/modules/*/android/.gradle/
+/modules/*/android/.cxx/
+
+# test coverage
+coverage/
