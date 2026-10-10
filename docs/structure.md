@@ -10,7 +10,7 @@ Pay Slice is an Expo (SDK 57) React Native expense manager, built for Android fi
 |---|---|
 | Navigation | Expo Router (file-based), bottom tabs with a custom tab bar |
 | Styling and theming | `react-native-unistyles` (light and dark themes) |
-| Persisted settings | `react-native-mmkv` (stores the chosen theme) |
+| Persisted data | `react-native-mmkv` (the chosen theme, and the Budget screen's income and categories) |
 | Icons | `lucide-react-native`, plus two local brand logos |
 | Fonts | Bebas Neue (headings), DM Sans (body), DM Mono (numbers and labels), via `@expo-google-fonts` |
 | In-app purchases | `expo-iap` (one-time tips on the Help Me tab) |
@@ -26,9 +26,12 @@ Native modules (MMKV, Unistyles, `expo-iap`) mean the app needs a development bu
 ```
 pay-slice/
 ├── app.json              Expo config (name, package, plugins)
+├── eas.json              EAS build profiles (no project id yet: run `eas init`)
+├── package.json          Dependencies, scripts and the Jest config
 ├── babel.config.js       Babel preset plus the Unistyles plugin (root: "src")
 ├── tsconfig.json         TypeScript config and the "@/..." path aliases
 ├── eslint.config.js      Lint config (`npx expo lint`)
+├── pnpm-workspace.yaml   pnpm settings (allowed build scripts)
 ├── assets/               App icon, splash and adaptive icon layers
 ├── docs/                 Project documentation (this folder)
 ├── .claude/, .vscode/    Editor and Claude Code settings (not app code)
@@ -121,11 +124,11 @@ Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` ar
 Small pure helpers with no framework code, shared by features and components.
 
 - `format.ts`: `formatAmount` (thousands separators, up to 2 decimals, no currency symbol) and `formatPercent`.
-- `number-input.ts`: `sanitizeDecimalInput`, which cleans a typed number (digits and one decimal point, a comma counts as the point, at most 2 decimals).
+- `number-input.ts`: `sanitizeDecimalInput`, which cleans a typed number (digits and one decimal point, a comma counts as the point, at most 2 decimals), and `parsePositiveNumber`, which returns the number or 0 for empty, invalid or non-positive text.
 
 ### Hard-coded colours (intentional)
 
-Theme colours come from the theme everywhere except two places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes) and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
+Theme colours come from the theme everywhere except three places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes), the dimmed backdrop behind the category sheet in `category-sheet.styles.ts` (`rgba(0, 0, 0, 0.5)`, the same on both themes), and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
 
 ## App icon and splash
 
@@ -148,15 +151,17 @@ All are 1024×1024 PNGs. The master art is not kept in the repo, so to change th
 
 - Three one-time products with the IDs `tip_coffee`, `tip_lunch` and `tip_feature` (see `help-me.data.ts`). They must exist in Google Play Console for the package `com.ahmersdev.payslice`.
 
-## Home screen behaviour
+## Budget screen (Home) behaviour
+
+The tab is called Budget (`PAGE_TITLES.HOME`), and its code lives in `features/home`.
 
 - One monthly income field (no currency symbol; any number works). It shows raw digits while focused and thousands separators when not.
-- Categories (label and percentage) start empty. Each row shows its percentage and its amount, and the amounts update live as the income changes. There is no calculate button.
+- Categories (label and percentage) start empty, and the "Unallocated" row still shows (100% of the income) so the screen is never blank. Each row shows its percentage and its amount, and the amounts update live as the income changes. There is no calculate button.
 - Tapping a row opens the sheet to edit it, with a Delete button (asks to confirm). The sheet prefills the percentage with whatever is still unallocated.
 - The total can pass 100%: this only warns. The allocation bar and an "Over by" row turn the warning color, and the sheet says how far over the total will be.
-- Under 100%, an "Unallocated" row shows the rest. Amounts are computed in whole cents and percentages in hundredths of a percent, and the unallocated amount is income minus the rounded rows, so the rows always add up.
+- Under 100%, the "Unallocated" row shows the rest. Amounts are computed in whole cents and percentages in hundredths of a percent, and the unallocated amount is income minus the rounded rows, so the rows add up. At exactly 100% the row is hidden, so a cent or so of rounding difference can go unshown.
 - Income and categories are saved to MMKV under one key (`pay_slice_budget`) on every change, and read synchronously on start. Broken or missing data falls back to an empty budget.
 
 ## Tests
 
-Jest with the `jest-expo` preset. The money maths (`home.utils.test.ts`), number cleaning and formatting (`utils/`) are covered. The screen hook and the sheet are not unit-tested yet.
+Jest with the `jest-expo` preset. The money maths (`home.utils.test.ts`) and the number helpers (`utils/format.test.ts`, `utils/number-input.test.ts`) are covered. The screen hook and the sheet are not unit-tested yet.
