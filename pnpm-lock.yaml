@@ -245,7 +245,7 @@ importers:
         specifier: ^2.5.2
         version: 2.5.2(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       react-native-unistyles:
-        specifier: ^3.4.0
+        specifier: ^3.5.2
         version: 3.5.2(41b1ff7d76e5e73f4f3f336432d65b20)
       react-native-worklets:
         specifier: 0.10.1
