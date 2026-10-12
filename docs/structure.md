@@ -119,7 +119,7 @@ Each layout is a folder with the same anatomy as a component and is exported fro
 
 ### `assets/icon/` (our own icons)
 
-Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` are small outlined SVG components built with `react-native-svg`. They are exported from `index.ts` and take `size`, `color` and `strokeWidth` like Lucide icons. Add any other custom icon here.
+Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` are small outlined SVG components built with `react-native-svg`. They are exported from `index.ts`, share their prop types (`IBrandIconProps`, `IAppIcon`) from `icon.interface.ts`, and take `size`, `color` and `strokeWidth` like Lucide icons. Add any other custom icon here.
 
 ### `utils/`
 

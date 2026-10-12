@@ -1,5 +1,5 @@
 import Svg, { Circle, Path, Rect } from "react-native-svg";
-import { IBrandIconProps } from "@/components/app-icon/app-icon.interface";
+import { IBrandIconProps } from "@/assets/icon/icon.interface";
 
 // Outlined mark from Feather (MIT); Lucide 1.x no longer ships brand icons.
 export default function LinkedinIcon(props: IBrandIconProps) {

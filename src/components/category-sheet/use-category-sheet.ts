@@ -4,12 +4,7 @@ import {
   parsePositiveNumber,
   sanitizeDecimalInput,
 } from "@/utils/number-input";
-import { ICategorySheetProps } from "./category-sheet.interface";
-
-type IUseCategorySheetProps = Pick<
-  ICategorySheetProps,
-  "initialLabel" | "initialPercent" | "otherPercent" | "onSave"
->;
+import { IUseCategorySheetProps } from "./category-sheet.interface";
 
 export default function useCategorySheet(props: IUseCategorySheetProps) {
   const { initialLabel, initialPercent, otherPercent, onSave } = props;

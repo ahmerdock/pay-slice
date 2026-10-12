@@ -8,3 +8,8 @@ export interface ICategorySheetProps {
   onDelete: () => void;
   onClose: () => void;
 }
+
+export type IUseCategorySheetProps = Pick<
+  ICategorySheetProps,
+  "initialLabel" | "initialPercent" | "otherPercent" | "onSave"
+>;
