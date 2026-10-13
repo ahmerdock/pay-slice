@@ -13,7 +13,7 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { useUnistyles } from "react-native-unistyles";
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function useRootLayout() {
   const { rt } = useUnistyles();
@@ -29,7 +29,7 @@ export default function useRootLayout() {
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [loaded, error]);
 
