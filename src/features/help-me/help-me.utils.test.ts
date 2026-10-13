@@ -3,6 +3,7 @@ import {
   getErrorMessage,
   HELP_ME_SKUS,
   isHelpMeProductId,
+  isPendingError,
   isUserCancelledError,
 } from "./help-me.utils";
 
@@ -47,5 +48,13 @@ describe("isHelpMeProductId", () => {
   it("accepts known SKUs and rejects unknown ones", () => {
     expect(isHelpMeProductId(HELP_ME_SKUS[0])).toBe(true);
     expect(isHelpMeProductId("not-a-sku")).toBe(false);
+  });
+});
+
+describe("isPendingError", () => {
+  it("is true only for the pending code", () => {
+    expect(isPendingError({ code: ErrorCode.Pending })).toBe(true);
+    expect(isPendingError({ code: ErrorCode.UserCancelled })).toBe(false);
+    expect(isPendingError(null)).toBe(false);
   });
 });

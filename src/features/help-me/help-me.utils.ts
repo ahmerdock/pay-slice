@@ -16,6 +16,14 @@ export const isUserCancelledError = (error: unknown): boolean => {
   return false;
 };
 
+export const isPendingError = (error: unknown): boolean => {
+  if (error && typeof error === "object" && "code" in error) {
+    return (error as { code?: string }).code === ErrorCode.Pending;
+  }
+
+  return false;
+};
+
 const UNKNOWN_ERROR_MESSAGE = "An unexpected error occurred";
 
 export const getErrorMessage = (error: unknown): string => {

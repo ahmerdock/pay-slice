@@ -8,6 +8,7 @@ import {
   getErrorMessage,
   HELP_ME_SKUS,
   isHelpMeProductId,
+  isPendingError,
   isUserCancelledError,
 } from "./help-me.utils";
 import type {
@@ -17,6 +18,14 @@ import type {
 
 const showError = (message: string) => {
   Toast.show({ type: "error", text1: message });
+};
+
+const showPending = () => {
+  Toast.show({
+    type: "info",
+    text1: "Payment pending",
+    text2: "Your tip will complete once the payment is approved.",
+  });
 };
 
 const showSuccess = (productId: string) => {
@@ -37,6 +46,32 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const purchasingProductIdRef = useRef<string | null>(null);
   const hasConsumedPendingRef = useRef(false);
+  const finishingTokensRef = useRef(new Set<string>());
+
+  // Completes a purchase once, even if the purchase listener and the startup
+  // sweep both see the same one.
+  const finishOnce = useCallback(
+    async (
+      purchase: Purchase,
+      finish: (purchase: Purchase) => Promise<void>,
+    ) => {
+      const token = purchase.purchaseToken ?? purchase.id;
+
+      if (finishingTokensRef.current.has(token)) {
+        return false;
+      }
+
+      finishingTokensRef.current.add(token);
+
+      try {
+        await finish(purchase);
+        return true;
+      } finally {
+        finishingTokensRef.current.delete(token);
+      }
+    },
+    [],
+  );
 
   const setPurchasingProductIdState = useCallback(
     (productId: string | null) => {
@@ -48,7 +83,9 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const handlePurchaseError = useCallback(
     (purchaseError: unknown) => {
-      if (!isUserCancelledError(purchaseError)) {
+      if (isPendingError(purchaseError)) {
+        showPending();
+      } else if (!isUserCancelledError(purchaseError)) {
         showError(getErrorMessage(purchaseError));
       }
 
@@ -69,9 +106,20 @@ export default function useHelpMe(): IUseHelpMeReturn {
         return;
       }
 
+      if (purchase.purchaseState === "pending") {
+        showPending();
+        setPurchasingProductIdState(null);
+        return;
+      }
+
       try {
-        await finishTransaction({ purchase, isConsumable: true });
-        showSuccess(purchase.productId);
+        const finished = await finishOnce(purchase, (item) =>
+          finishTransaction({ purchase: item, isConsumable: true }),
+        );
+
+        if (finished) {
+          showSuccess(purchase.productId);
+        }
       } catch (finishError) {
         showError(getErrorMessage(finishError));
       } finally {
@@ -107,18 +155,23 @@ export default function useHelpMe(): IUseHelpMeReturn {
       return;
     }
 
-    hasConsumedPendingRef.current = true;
-
     try {
       const pendingPurchases = await getAvailablePurchases();
 
+      hasConsumedPendingRef.current = true;
+
       for (const purchase of pendingPurchases) {
-        if (!isHelpMeProductId(purchase.productId)) {
+        if (
+          !isHelpMeProductId(purchase.productId) ||
+          purchase.purchaseState === "pending"
+        ) {
           continue;
         }
 
         try {
-          await finishTransaction({ purchase, isConsumable: true });
+          await finishOnce(purchase, (item) =>
+            finishTransaction({ purchase: item, isConsumable: true }),
+          );
         } catch (pendingError) {
           console.warn(
             "[useHelpMe] Failed to consume pending purchase:",
@@ -132,7 +185,7 @@ export default function useHelpMe(): IUseHelpMeReturn {
         pendingError,
       );
     }
-  }, [finishTransaction, isAvailable]);
+  }, [finishOnce, finishTransaction, isAvailable]);
 
   useEffect(() => {
     if (!isAvailable || !connected) {

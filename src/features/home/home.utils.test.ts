@@ -86,4 +86,19 @@ describe("parseStoredBudget", () => {
       categories: [{ id: "1", label: "Savings", percent: 14 }],
     });
   });
+
+  it("drops categories beyond the input limits", () => {
+    const stored = JSON.stringify({
+      income: "",
+      categories: [
+        { id: "1", label: "x".repeat(41), percent: 10 },
+        { id: "2", label: "Too much", percent: 101 },
+        { id: "3", label: "Edge", percent: 100 },
+      ],
+    });
+
+    expect(parseStoredBudget(stored).categories).toEqual([
+      { id: "3", label: "Edge", percent: 100 },
+    ]);
+  });
 });

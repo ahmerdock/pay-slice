@@ -42,9 +42,11 @@ const isCategory = (value: unknown): value is ICategory => {
   return (
     typeof id === "string" &&
     typeof label === "string" &&
+    label.length <= 40 &&
     typeof percent === "number" &&
     Number.isFinite(percent) &&
-    percent > 0
+    percent > 0 &&
+    percent <= 100
   );
 };
 

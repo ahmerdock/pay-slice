@@ -106,6 +106,7 @@ export default function CategorySheet(props: ICategorySheetProps) {
               accessibilityRole="button"
               activeOpacity={0.7}
               disabled={!canSave}
+              accessibilityState={{ disabled: !canSave }}
               onPress={save}
               style={categorySheetStyles.button("primary", !canSave)}
             >
