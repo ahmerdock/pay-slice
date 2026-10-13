@@ -1,4 +1,8 @@
-import { computeBreakdown, parseStoredBudget } from "./home.utils";
+import {
+  computeBreakdown,
+  getInitialPercent,
+  parseStoredBudget,
+} from "./home.utils";
 
 const category = (id: string, percent: number) => ({
   id,
@@ -100,5 +104,20 @@ describe("parseStoredBudget", () => {
     expect(parseStoredBudget(stored).categories).toEqual([
       { id: "3", label: "Edge", percent: 100 },
     ]);
+  });
+});
+
+describe("getInitialPercent", () => {
+  it("uses the percent of the category being edited", () => {
+    expect(getInitialPercent(25, 40)).toBe("25");
+  });
+
+  it("suggests what is left for a new category", () => {
+    expect(getInitialPercent(undefined, 40)).toBe("40");
+  });
+
+  it("suggests nothing when nothing is left or the budget is over", () => {
+    expect(getInitialPercent(undefined, 0)).toBe("");
+    expect(getInitialPercent(undefined, -10)).toBe("");
   });
 });
