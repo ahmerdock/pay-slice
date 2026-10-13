@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   KeyboardAvoidingView,
   Modal,
@@ -16,6 +17,7 @@ export default function CategorySheet(props: ICategorySheetProps) {
   const { visible, isEdit, onDelete, onClose } = props;
 
   const { theme } = useUnistyles();
+  const percentInputRef = useRef<TextInput>(null);
   const {
     label,
     percentText,
@@ -38,29 +40,35 @@ export default function CategorySheet(props: ICategorySheetProps) {
         style={categorySheetStyles.backdrop}
       >
         <Pressable
+          accessibilityRole="button"
           accessibilityLabel="Close"
           style={categorySheetStyles.dismissArea}
           onPress={onClose}
         />
 
         <View style={categorySheetStyles.sheet}>
-          <Text style={categorySheetStyles.title}>
+          <Text accessibilityRole="header" style={categorySheetStyles.title}>
             {isEdit ? "EDIT CATEGORY" : "NEW CATEGORY"}
           </Text>
 
           <Text style={categorySheetStyles.fieldLabel}>Label</Text>
           <TextInput
+            accessibilityLabel="Category label"
             value={label}
             onChangeText={setLabel}
             placeholder="Savings"
             placeholderTextColor={theme.colors.textSecondary}
             maxLength={40}
             returnKeyType="next"
+            submitBehavior="submit"
+            onSubmitEditing={() => percentInputRef.current?.focus()}
             style={categorySheetStyles.input}
           />
 
           <Text style={categorySheetStyles.fieldLabel}>Percentage</Text>
           <TextInput
+            ref={percentInputRef}
+            accessibilityLabel="Percentage"
             value={percentText}
             onChangeText={setPercentText}
             placeholder="14"
@@ -74,7 +82,12 @@ export default function CategorySheet(props: ICategorySheetProps) {
           />
 
           {warning ? (
-            <Text style={categorySheetStyles.warning}>{warning}</Text>
+            <Text
+              accessibilityLiveRegion="polite"
+              style={categorySheetStyles.warning}
+            >
+              {warning}
+            </Text>
           ) : null}
 
           <View style={categorySheetStyles.actions}>
