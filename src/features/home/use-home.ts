@@ -11,22 +11,12 @@ import { IBudget } from "./home.interface";
 import {
   computeBreakdown,
   createCategoryId,
+  getInitialPercent,
   parseStoredBudget,
 } from "./home.utils";
 
 const saveBudget = (budget: IBudget) => {
   mmkvStorage.set(BUDGET_STORAGE_KEY, JSON.stringify(budget));
-};
-
-const getInitialPercent = (
-  editingPercent: number | undefined,
-  remainingPercent: number,
-) => {
-  if (editingPercent !== undefined) {
-    return String(editingPercent);
-  }
-
-  return remainingPercent > 0 ? String(remainingPercent) : "";
 };
 
 export default function useHome() {

@@ -77,3 +77,14 @@ export const parseStoredBudget = (raw: string | undefined): IBudget => {
 
 export const createCategoryId = () =>
   `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+
+export const getInitialPercent = (
+  editingPercent: number | undefined,
+  remainingPercent: number,
+) => {
+  if (editingPercent !== undefined) {
+    return String(editingPercent);
+  }
+
+  return remainingPercent > 0 ? String(remainingPercent) : "";
+};

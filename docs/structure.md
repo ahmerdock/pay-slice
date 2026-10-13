@@ -86,7 +86,7 @@ A feature folder holds everything for one screen:
 Create only the files a feature needs. Examples:
 - `home/`: the expense manager. `use-home.ts` holds the state (income, categories, sheet) and saves to MMKV inside its handlers, `home.utils.ts` has the pure maths (`computeBreakdown`, `parseStoredBudget`), `home.data.ts` the storage key, `home.styles.ts` and `home.interface.ts`.
 - `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.data.ts` (contact links), `settings.styles.ts`.
-- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts` (product-ID and purchase-error helpers, with `help-me.utils.test.ts`). It has no styles file because it borrows `actionCardStyles` from the barrel.
+- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts` (product-ID and purchase-error helpers, plus the `showError`, `showPending` and `showSuccess` toasts, with `help-me.utils.test.ts`). It has no styles file because it borrows `actionCardStyles` from the barrel.
 
 ### `components/` (reusable UI)
 
@@ -100,12 +100,12 @@ components/card/
 ```
 
 Add `use-<name>.ts` when the component has logic (state, animation, handlers) and `<name>.utils.ts` or `<name>.data.ts` for helpers and static data. Current components:
-- `custom-switch/`: animation and toggle logic live in `use-custom-switch.ts`.
+- `custom-switch/`: animation and toggle logic live in `use-custom-switch.ts`; the thumb travel distance is in `custom-switch.data.ts`.
 - `custom-tab-bar/`: `use-custom-tab-bar.ts` (pill animation, press handling) and `custom-tab-bar.utils.ts` (the tab list: icon and label per route).
-- `tab-item/`: a single tab, with its own hook for the label animation.
-- `app-icon/`: renders any Lucide-style icon at a given size, color and stroke width.
+- `tab-item/`: a single tab, with its own hook for the label animation (`MAX_LABEL_WIDTH` is in `tab-item.data.ts`).
+- `app-icon/`: renders any Lucide-style icon at a given size, color and stroke width. It owns `IBrandIconProps` and `IAppIcon` in `app-icon.interface.ts`, and the default stroke width is in `app-icon.data.ts`.
 - `action-card/`, `card/`, `screen-title/`, `short-heading/`: small building blocks.
-- `allocation-bar/`, `category-row/`, `category-sheet/`: the Home screen pieces. `category-sheet/` is a bottom-sheet `Modal` with a label and a percentage field, used for both adding and editing; `use-category-sheet.ts` holds its form state and the over-100% warning.
+- `allocation-bar/`, `category-row/`, `category-sheet/`: the Home screen pieces. `category-sheet/` is a bottom-sheet `Modal` with a label and a percentage field, used for both adding and editing; `use-category-sheet.ts` holds its form state, the over-100% warning and the ref that moves focus from the label field to the percentage field.
 - Components never import from `features/`.
 
 `components/index.ts` is the barrel. Every component is exported from it.
@@ -119,7 +119,7 @@ Each layout is a folder with the same anatomy as a component and is exported fro
 
 ### `assets/icon/` (our own icons)
 
-Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` are small outlined SVG components built with `react-native-svg`. They are exported from `index.ts`, share their prop types (`IBrandIconProps`, `IAppIcon`) from `icon.interface.ts`, and take `size`, `color` and `strokeWidth` like Lucide icons. Add any other custom icon here.
+Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` are small outlined SVG components built with `react-native-svg`. They are exported from `index.ts`, import their prop type (`IBrandIconProps`) from `@/components/app-icon/app-icon.interface`, and take `size`, `color` and `strokeWidth` like Lucide icons. Add any other custom icon here.
 
 ### `utils/`
 

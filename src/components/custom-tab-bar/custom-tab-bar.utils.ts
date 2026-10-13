@@ -1,7 +1,7 @@
 import HeartHandshake from "lucide-react-native/icons/heart-handshake";
 import Wallet from "lucide-react-native/icons/wallet";
 import Settings from "lucide-react-native/icons/settings";
-import { IAppIcon } from "@/assets/icon/icon.interface";
+import { IAppIcon } from "@/components/app-icon/app-icon.interface";
 import { PAGE_TITLES, ROUTE_NAMES } from "@/constants/routes";
 
 export const TAB_CONFIG: Record<string, { icon: IAppIcon; label: string }> = {

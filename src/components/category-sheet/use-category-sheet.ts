@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import type { TextInput } from "react-native";
 import { formatPercent } from "@/utils/format";
 import {
   parsePositiveNumber,
@@ -8,6 +9,8 @@ import { IUseCategorySheetProps } from "./category-sheet.interface";
 
 export default function useCategorySheet(props: IUseCategorySheetProps) {
   const { initialLabel, initialPercent, otherPercent, onSave } = props;
+
+  const percentInputRef = useRef<TextInput>(null);
 
   const [label, setLabel] = useState(initialLabel);
   const [percentText, setPercentText] = useState(initialPercent);
@@ -29,7 +32,11 @@ export default function useCategorySheet(props: IUseCategorySheetProps) {
     }
   };
 
+  const focusPercentInput = () => percentInputRef.current?.focus();
+
   return {
+    percentInputRef,
+    focusPercentInput,
     label,
     percentText,
     canSave,

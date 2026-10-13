@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import {
   KeyboardAvoidingView,
   Modal,
@@ -17,8 +16,9 @@ export default function CategorySheet(props: ICategorySheetProps) {
   const { visible, isEdit, onDelete, onClose } = props;
 
   const { theme } = useUnistyles();
-  const percentInputRef = useRef<TextInput>(null);
   const {
+    percentInputRef,
+    focusPercentInput,
     label,
     percentText,
     canSave,
@@ -61,7 +61,7 @@ export default function CategorySheet(props: ICategorySheetProps) {
             maxLength={40}
             returnKeyType="next"
             submitBehavior="submit"
-            onSubmitEditing={() => percentInputRef.current?.focus()}
+            onSubmitEditing={focusPercentInput}
             style={categorySheetStyles.input}
           />
 
