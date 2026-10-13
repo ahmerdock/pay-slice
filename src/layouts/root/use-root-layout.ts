@@ -13,7 +13,8 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { useUnistyles } from "react-native-unistyles";
 
-SplashScreen.preventAutoHideAsync().catch(() => {});
+// A failed splash call must not become an unhandled rejection; the app still runs.
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function useRootLayout() {
   const { rt } = useUnistyles();
@@ -29,7 +30,7 @@ export default function useRootLayout() {
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => undefined);
     }
   }, [loaded, error]);
 

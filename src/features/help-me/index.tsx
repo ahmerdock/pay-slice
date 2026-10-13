@@ -20,7 +20,7 @@ export default function HelpMe() {
 
       {HELP_ME_PRODUCTS.map((tier) => {
         const isPurchasing = purchasingProductId === tier.id;
-        const product = productsById[tier.id];
+        const displayPrice = productsById[tier.id]?.displayPrice;
 
         return (
           <ActionCard
@@ -29,15 +29,18 @@ export default function HelpMe() {
             description={tier.description}
             icon={tier.icon}
             disabled={
-              !isAvailable || isProductsLoading || !product || isPurchasing
+              !isAvailable ||
+              isProductsLoading ||
+              !productsById[tier.id] ||
+              isPurchasing
             }
             onPress={() => purchase(tier.id)}
             trailing={
-              isPurchasing ? (
+              isPurchasing || (isProductsLoading && !displayPrice) ? (
                 <ActivityIndicator size="small" />
-              ) : product ? (
+              ) : displayPrice ? (
                 <Text style={actionCardStyles.trailingText}>
-                  {product.displayPrice}
+                  {displayPrice}
                 </Text>
               ) : null
             }

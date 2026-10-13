@@ -1,9 +1,10 @@
-import { Linking } from "react-native";
+import { AccessibilityInfo, Linking } from "react-native";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useUnistyles } from "react-native-unistyles";
 import { mmkvStorage, THEME_STORAGE_KEY } from "@/theme/unistyles";
+import type { IUseSettingsReturn } from "./settings.interface";
 
-export default function useSettings() {
+export default function useSettings(): IUseSettingsReturn {
   const { rt } = useUnistyles();
   const isDark = rt.themeName === "dark";
 
@@ -18,6 +19,7 @@ export default function useSettings() {
       await Linking.openURL(url);
     } catch {
       Toast.show({ type: "error", text1: "Couldn't open the link" });
+      AccessibilityInfo.announceForAccessibility("Couldn't open the link");
     }
   };
 

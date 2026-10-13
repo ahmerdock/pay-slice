@@ -51,7 +51,7 @@ src/
 ├── layouts/        RootLayout (app shell) and TabsLayout (shared tab page layout)
 ├── components/     Reusable UI components, plus a barrel (index.ts)
 ├── assets/icon/    Our own SVG icon components (GitHub, LinkedIn)
-├── constants/      Route names, page titles, layout numbers
+├── constants/      Route names, page titles, layout numbers and the tab bar style (`getTabBarStyle`)
 ├── utils/          Small pure helpers (number formatting and input cleaning)
 └── theme/          Unistyles setup: themes, fonts, saved-theme loading
 ```
@@ -64,7 +64,7 @@ Every file here is a route. Keep them thin: a route file only renders the matchi
 app/
 ├── _layout.tsx          Theme import, then renders layouts/root (RootLayout)
 └── (tabs)/
-    ├── _layout.tsx      Tabs navigator using the custom tab bar
+    ├── _layout.tsx      `TabsNavigator`: tabs navigator using the custom tab bar
     ├── index.tsx        Budget tab      -> features/home (income and category split)
     ├── help-me.tsx      Help Me tab     -> features/help-me
     └── settings.tsx     Settings tab    -> features/settings
@@ -85,7 +85,7 @@ A feature folder holds everything for one screen:
 
 Create only the files a feature needs. Examples:
 - `home/`: the expense manager. `use-home.ts` holds the state (income, categories, sheet) and saves to MMKV inside its handlers, `home.utils.ts` has the pure maths (`computeBreakdown`, `parseStoredBudget`), `home.data.ts` the storage key, `home.styles.ts` and `home.interface.ts`.
-- `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.data.ts` (contact links), `settings.styles.ts`.
+- `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.interface.ts`, `settings.data.ts` (contact links), `settings.styles.ts`.
 - `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts` (product-ID and purchase-error helpers, plus the `showError`, `showPending` and `showSuccess` toasts, with `help-me.utils.test.ts`). It has no styles file because it borrows `actionCardStyles` from the barrel.
 
 ### `components/` (reusable UI)

@@ -1,4 +1,5 @@
 import { ErrorCode } from "expo-iap";
+import { AccessibilityInfo } from "react-native";
 import Toast from "react-native-toast-message";
 import { HELP_ME_PRODUCT_IDS, HELP_ME_PRODUCTS } from "./help-me.data";
 
@@ -11,19 +12,17 @@ export const isHelpMeProductId = (productId: string): boolean =>
 
 export const isUserCancelledError = (error: unknown): boolean => {
   if (error && typeof error === "object" && "code" in error) {
-    return (error as { code?: string }).code === ErrorCode.UserCancelled;
+    return error.code === ErrorCode.UserCancelled;
   }
 
   return false;
 };
 
-export const isPendingError = (error: unknown): boolean => {
-  if (error && typeof error === "object" && "code" in error) {
-    return (error as { code?: string }).code === ErrorCode.Pending;
-  }
-
-  return false;
-};
+export const isPendingError = (error: unknown): boolean =>
+  !!error &&
+  typeof error === "object" &&
+  "code" in error &&
+  error.code === ErrorCode.Pending;
 
 const UNKNOWN_ERROR_MESSAGE = "An unexpected error occurred";
 
@@ -33,9 +32,8 @@ export const getErrorMessage = (error: unknown): string => {
   }
 
   if (error && typeof error === "object" && "message" in error) {
-    const { message } = error as { message?: unknown };
-    if (typeof message === "string") {
-      return message;
+    if (typeof error.message === "string") {
+      return error.message;
     }
   }
 
@@ -44,20 +42,18 @@ export const getErrorMessage = (error: unknown): string => {
 
 export const showError = (message: string) => {
   Toast.show({ type: "error", text1: message });
-};
-
-export const showPending = () => {
-  Toast.show({
-    type: "info",
-    text1: "Payment pending",
-    text2: "Your tip will complete once the payment is approved.",
-  });
+  AccessibilityInfo.announceForAccessibility(message);
 };
 
 export const showSuccess = (productId: string) => {
   const tier = HELP_ME_PRODUCTS.find((product) => product.id === productId);
-  Toast.show({
-    type: "success",
-    text1: tier?.successMessage ?? "Thank you for your support!",
-  });
+  const message = tier?.successMessage ?? "Thank you for your support!";
+  Toast.show({ type: "success", text1: message });
+  AccessibilityInfo.announceForAccessibility(message);
+};
+
+export const showPending = () => {
+  const message = "Your payment is pending. It will complete once approved.";
+  Toast.show({ type: "info", text1: message });
+  AccessibilityInfo.announceForAccessibility(message);
 };
