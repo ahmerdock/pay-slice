@@ -64,11 +64,11 @@ export default function Home() {
 
       <ShortHeading heading="CATEGORIES" />
 
-      {hasCategories ? null : (
+      {!hasCategories ? (
         <Text style={homeStyles.emptyText}>
           No categories yet. Add one to split your income by percentage.
         </Text>
-      )}
+      ) : null}
 
       {rows.map((row) => (
         <CategoryRow

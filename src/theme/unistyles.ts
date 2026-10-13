@@ -19,6 +19,8 @@ const typography = {
   },
 };
 
+const gap = (v: number) => v * 8;
+
 const lightTheme = {
   colors: {
     primary: "#b63331",
@@ -30,7 +32,7 @@ const lightTheme = {
     warning: "#B45309",
   },
   typography,
-  gap: (v: number) => v * 8,
+  gap,
 };
 
 const darkTheme = {
@@ -44,7 +46,7 @@ const darkTheme = {
     warning: "#F5A524",
   },
   typography,
-  gap: (v: number) => v * 8,
+  gap,
 };
 
 const appThemes = {
