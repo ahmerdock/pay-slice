@@ -132,6 +132,10 @@ Small pure helpers with no framework code, shared by features and components.
 
 Theme colours come from the theme everywhere except three places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes), the dimmed backdrop behind the category sheet in `category-sheet.styles.ts` (`rgba(0, 0, 0, 0.5)`, the same on both themes), and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
 
+## Android manifest hardening
+
+`app.json` sets `android.allowBackup` to `false`, so Google Drive auto-backup never copies the app's storage (the saved budget and theme). It also lists `blockedPermissions` for `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `SYSTEM_ALERT_WINDOW` and `VIBRATE`, which the Expo template adds but this app never uses. These take effect on the next native build.
+
 ## App icon and splash
 
 The icon is a wallet with a pie chart. The files are in `assets/`, and `app.json` points at them:
