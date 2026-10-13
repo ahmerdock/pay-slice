@@ -17,7 +17,7 @@ Pay Slice is an Expo (SDK 57) React Native expense manager, built for Android fi
 | Toasts | `react-native-toast-message` |
 | Gestures | `react-native-gesture-handler` |
 | Animation | `react-native-reanimated` |
-| Tests | Jest with the `jest-expo` preset and `@testing-library/react-native` |
+| Tests | Jest with the `jest-expo` preset |
 
 Native modules (MMKV, Unistyles, `expo-iap`) mean the app needs a development build. It does not run in Expo Go: `npx expo run:android`.
 

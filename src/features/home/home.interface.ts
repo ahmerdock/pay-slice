@@ -9,7 +9,7 @@ export interface IBudget {
   categories: ICategory[];
 }
 
-export interface IBreakdownRow extends ICategory {
+interface IBreakdownRow extends ICategory {
   amount: number;
 }
 
