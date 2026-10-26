@@ -38,7 +38,9 @@
           "imageWidth": 200
         }
       ],
-      "expo-iap"
+      "expo-iap",
+      "expo-font",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
