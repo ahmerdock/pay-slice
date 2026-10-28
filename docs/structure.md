@@ -155,7 +155,7 @@ All are 1024×1024 PNGs. The master art is not kept in the repo, so to change th
 
 ## Help Me tips
 
-- Three one-time products with the IDs `tip_coffee`, `tip_lunch` and `tip_feature` (see `help-me.data.ts`). They must exist in Google Play Console for the package `com.ahmersdev.payslice`.
+- Three one-time products with the IDs `tip_coffee`, `tip_lunch` and `tip_feature` (see `help-me.data.ts`). They must exist in Google Play Console for the package `com.ahmerdock.payslice`.
 
 ## Budget screen (Home) behaviour
 

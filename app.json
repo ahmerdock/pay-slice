@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.ahmersdev.payslice"
+      "bundleIdentifier": "com.ahmerdock.payslice"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +26,7 @@
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.VIBRATE"
       ],
-      "package": "com.ahmersdev.payslice"
+      "package": "com.ahmerdock.payslice"
     },
     "plugins": [
       "expo-router",
@@ -49,8 +49,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "32036a88-83f8-4f1e-8bb5-d88da227bb11"
+        "projectId": "3c6569e7-dc64-4fdb-bf76-c7c3815983db"
       }
-    }
+    },
+    "owner": "ahmerdock"
   }
 }

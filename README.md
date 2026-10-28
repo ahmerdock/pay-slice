@@ -17,6 +17,6 @@ Useful checks: `npx expo lint`, `npx tsc --noEmit`, `pnpm test`. The stack is Ex
 
 ## Notes
 
-- **Help Me tips:** Purchases need three one-time products (`tip_coffee`, `tip_lunch`, `tip_feature`) set up in Google Play Console for the package `com.ahmersdev.payslice`, and a build installed from a Play test track. Without them the tip cards stay disabled, which is expected on a local build.
+- **Help Me tips:** Purchases need three one-time products (`tip_coffee`, `tip_lunch`, `tip_feature`) set up in Google Play Console for the package `com.ahmerdock.payslice`, and a build installed from a Play test track. Without them the tip cards stay disabled, which is expected on a local build.
 - **EAS:** Run `eas init` to link a new EAS project; `eas.json` has build profiles but no project id yet.
 - See [docs/structure.md](docs/structure.md) for the project layout and patterns.
